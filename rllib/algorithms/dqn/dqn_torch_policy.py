@@ -271,7 +271,7 @@ def build_q_losses(policy: Policy, model, _, train_batch: SampleBatch) -> Tensor
     q_t, q_logits_t, q_probs_t, _ = compute_q_values(
         policy,
         model,
-        {"obs": train_batch[SampleBatch.CUR_OBS]},
+        {"obs": train_batch[SampleBatch.CUR_OBS], "is_training": True},
         explore=False,
         is_training=True,
     )
@@ -280,7 +280,7 @@ def build_q_losses(policy: Policy, model, _, train_batch: SampleBatch) -> Tensor
     q_tp1, q_logits_tp1, q_probs_tp1, _ = compute_q_values(
         policy,
         policy.target_models[model],
-        {"obs": train_batch[SampleBatch.NEXT_OBS]},
+        {"obs": train_batch[SampleBatch.NEXT_OBS], "is_training": True},
         explore=False,
         is_training=True,
     )
@@ -308,7 +308,7 @@ def build_q_losses(policy: Policy, model, _, train_batch: SampleBatch) -> Tensor
         ) = compute_q_values(
             policy,
             model,
-            {"obs": train_batch[SampleBatch.NEXT_OBS]},
+            {"obs": train_batch[SampleBatch.NEXT_OBS], "is_training": True},
             explore=False,
             is_training=True,
         )
@@ -435,10 +435,10 @@ def compute_q_values(
             support_logits_per_action,
             logits,
             probs_or_logits,
-        ) = model.get_q_value_distributions(model_out)
+        ) = model.get_q_value_distributions(model_out, input_dict=input_dict)
     else:
         (action_scores, logits, probs_or_logits) = model.get_q_value_distributions(
-            model_out
+            model_out, input_dict=input_dict
         )
 
     if config["dueling"]:

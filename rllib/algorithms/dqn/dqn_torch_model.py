@@ -131,7 +131,7 @@ class DQNTorchModel(TorchModelV2, nn.Module):
                 )
             self.value_module = value_module
 
-    def get_q_value_distributions(self, model_out):
+    def get_q_value_distributions(self, model_out, input_dict=None):
         """Returns distributional values for Q(s, a) given a state embedding.
 
         Override this in your custom model to customize the Q output head.

@@ -600,7 +600,7 @@ def reduce_mean_ignore_inf(x: TensorType, axis: Optional[int] = None) -> TensorT
     Returns:
         The mean reduced inputs, ignoring inf values.
     """
-    mask = torch.ne(x, float("-inf"))
+    mask = torch.ge(x, FLOAT_MIN)
     x_zeroed = torch.where(mask, x, torch.zeros_like(x))
     return torch.sum(x_zeroed, axis) / torch.sum(mask.float(), axis)
 
